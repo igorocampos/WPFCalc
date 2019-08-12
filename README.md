@@ -213,7 +213,7 @@ Basically, all 4 operations will need 2 numbers and will return a decimal result
 In order to save some code lines and getting things more maintainable, we will use here a Class Interface. A very simple one indeed:
 
 ```cs
- public interface IOperation
+public interface IOperation
 {
     decimal DoOperation(decimal val1, decimal val2);
 }
@@ -222,7 +222,7 @@ In order to save some code lines and getting things more maintainable, we will u
 And now we will have 4 classes that implement this interface
 
 ```cs
- public class Sum : IOperation
+public class Sum : IOperation
 {
     public decimal DoOperation(decimal val1, decimal val2) => val1 + val2;
 }
@@ -252,8 +252,8 @@ In order to know which Operation to do, we will need an `IOperation` variable, w
 IOperation CurrentOperation;
 ```
 
-### `FirstValue`
-We will also need to save somewhere the first value typed right before the Operation Button was clicked. 
+### First Value
+We will also need to save somewhere the first value typed right before the Operation Button Click. 
 For this, let's create a property called `FirstValue`.
 ```cs
 decimal FirstValue { get; set; }
@@ -293,6 +293,85 @@ private void operationButton_Click(object sender, RoutedEventArgs e)
 <Button x:Name="btnSum" Content="+" Grid.Row="3" Grid.Column="4" FontSize="20" Margin="2" Click="operationButton_Click"/>
 <Button x:Name="btnSubtraction" Content="-" Grid.Row="4" Grid.Column="3" FontSize="20" Margin="2" Click="operationButton_Click"/>
 ```
+
+### Clear All
+Now we can change the Clear All button click to 
+```cs
+private void btnClearAll_Click(object sender, RoutedEventArgs e)
+{
+    FirstValue = 0;
+    CurrentOperation = null;
+    txtInput.Text = "0";
+}
+```
+
+### Equals Button
+For last we can code our Equals button click
+```cs
+private void btnEquals_Click(object sender, RoutedEventArgs e)
+{
+    if (CurrentOperation == null)
+        return;
+
+    if (txtInput.Text == "")
+        return;
+
+    decimal val2 = Convert.ToDecimal(txtInput.Text);
+    txtInput.Text = CurrentOperation.DoOperation(FirstValue, val2).ToString();
+}
+```
+```xaml
+<Button x:Name="btnEquals" Content="=" Grid.Row="5" Grid.Column="2" FontSize="20" Margin="2" Grid.ColumnSpan="2" Click="btnEquals_Click"/>
+```
+
+#### Multiple Equals button click
+Perhaps you are familiar with the behavior of pressing multiple times the button equals in the calculator. The result is the last operation repeated again and again.
+In order to get this, we will also need to save somehow the last typed value instead of using what appears in the display.
+Let's create a nullable decimal property for this.
+```cs
+decimal? SecondValue { get; set; }
+```
+
+When SecondValue is null then button equals was not pressed yet.
+Thus, we can reset it on the operation buttons click event
+```cs
+private void operationButton_Click(object sender, RoutedEventArgs e)
+{
+    //if current operation is not null then we already have the FirstValue
+    if (CurrentOperation == null)
+        FirstValue = Convert.ToDecimal(txtInput.Text);
+
+    CurrentOperation = (IOperation)((Button)sender).Tag;
+    SecondValue = null;
+    txtInput.Text = "";
+}
+```
+Our event handler will now look like this:
+```cs
+private void btnEquals_Click(object sender, RoutedEventArgs e)
+{
+    if (CurrentOperation == null)
+        return;
+
+    if (txtInput.Text == "")
+        return;
+
+    //SecondValue is used for multiple clicks on Equals bringing the newest result of last operation
+    decimal val2 = SecondValue ?? Convert.ToDecimal(txtInput.Text);
+    txtInput.Text = (FirstValue = CurrentOperation.DoOperation(FirstValue, (decimal)(SecondValue = val2))).ToString();
+}
+```
+This line is a little bit tricky
+`txtInput.Text = (FirstValue = CurrentOperation.DoOperation(FirstValue, (decimal)(SecondValue = val2))).ToString();`
+
+It is actually the simplification of 
+```cs
+var result = CurrentOperation.DoOperation(FirstValue, val2);
+txtInput.Text = result.ToString();
+FirstValue = result;
+SecondValue = val2;
+```
+
 
 
 # Future features
