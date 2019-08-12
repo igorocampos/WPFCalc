@@ -39,20 +39,22 @@ The component that we need to get it done is called `Grid` and we can insert it 
 
 After that, we want to set the Rows and Columns definitions, as below:
 ```xaml
-<Grid.RowDefinitions>
-    <RowDefinition Height="40"/>
-    <RowDefinition Height="*"/>
-    <RowDefinition Height="*"/>
-    <RowDefinition Height="*"/>
-    <RowDefinition Height="*"/>
-    <RowDefinition Height="*"/>
-</Grid.RowDefinitions>
-<Grid.ColumnDefinitions>
-    <ColumnDefinition Width="*"/>
-    <ColumnDefinition Width="*"/>
-    <ColumnDefinition Width="*"/>
-    <ColumnDefinition Width="*"/>
-</Grid.ColumnDefinitions>
+<Grid>
+    <Grid.RowDefinitions>
+        <RowDefinition Height="40"/>
+        <RowDefinition Height="*"/>
+        <RowDefinition Height="*"/>
+        <RowDefinition Height="*"/>
+        <RowDefinition Height="*"/>
+        <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+</Grid>
 ```
 Here we said that we want 6 rows and 4 columns in our grid, and all columns should have the same width dividing the total width of the Grid equally. Same for the rows height, except the first one, which will have a fixed height of `40`. We will use this row for our Textbox.
 
@@ -361,17 +363,123 @@ private void btnEquals_Click(object sender, RoutedEventArgs e)
     txtInput.Text = (FirstValue = CurrentOperation.DoOperation(FirstValue, (decimal)(SecondValue = val2))).ToString();
 }
 ```
-This line is a little bit tricky
-`txtInput.Text = (FirstValue = CurrentOperation.DoOperation(FirstValue, (decimal)(SecondValue = val2))).ToString();`
-
-It is actually the simplification of 
+This last line is a little bit tricky. It is actually the simplification of 
 ```cs
 var result = CurrentOperation.DoOperation(FirstValue, val2);
 txtInput.Text = result.ToString();
 FirstValue = result;
 SecondValue = val2;
 ```
+# Improving UX
+We can do better allowing not only clicks on the buttons but also keyboard typing.
+Here we will have one more difference from `WinForms`. There is no `KeyPress` event that gives the pressed `KeyChar`.
 
+You could try and use the `KeyDown` event, along with the `e.Key` in a switch, but it gets tricky with the `*` and `/` because they are different in some keyboards...
+
+So instead we should use the `PreviewTextInput` event. Our xaml will be changed to:
+```xaml
+<Window x:Class="WPFCalc.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFCalc"
+        mc:Ignorable="d"
+        Title="WPF Calculator" 
+        Height="400" 
+        Width="280" 
+        PreviewTextInput="Window_PreviewTextInput" 
+        WindowStartupLocation="CenterScreen">
+```
+And we will have this method on `MainWindow.xaml.cs`
+```cs
+private void Window_PreviewTextInput(object sender, TextCompositionEventArgs e)
+{
+   
+}
+```
+
+## SendToInput()
+Instead of firing `regularButtonClick` we can create a method called `SendToInput` since we will already know which string to send, and will not need to check the button's `Content` for this.
+
+```cs
+private void regularButtonClick(object sender, RoutedEventArgs e)
+    => SendToInput(((Button)sender).Content.ToString());
+
+private void SendToInput(string content)
+{
+    //Prevent 0 from appearing on the left of new numbers
+    if (txtInput.Text == "0")
+        txtInput.Text = "";
+
+    txtInput.Text = $"{txtInput.Text}{content}";
+}
+```
+## PerformClick()
+There is no `PerformClick` method in `WPF`...
+However, we can work around this creating our own Extension Method:
+```cs
+public static void PerformClick(this Button btn)
+    => btn.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+```
+You can put this in any public static class. I chose to create a file called `ExtMethods.cs` and create a public static class with the same name for it.
+
+## PreviewTextInput
+Finally our PreviewTextInput method will look like this:
+```cs
+private void Window_PreviewTextInput(object sender, TextCompositionEventArgs e)
+{
+    switch (e.Text)
+    {
+        case "0":
+        case "1":
+        case "2":
+        case "3":
+        case "4":
+        case "5":
+        case "6":
+        case "7":
+        case "8":
+        case "9":
+            SendToInput(e.Text);
+            break;
+
+        case "*":
+            btnMultiplication.PerformClick();
+            break;
+
+        case "-":
+            btnSubtraction.PerformClick();
+            break;
+
+        case "+":
+            btnSum.PerformClick();
+            break;
+
+        case "/":
+            btnDivision.PerformClick();
+            break;
+
+        case "=":
+            btnEquals.PerformClick();
+            break;
+
+        default:
+            //Can't use directly from switch because it is not a constant
+            if (e.Text == DecimalSeparator)
+                btnPoint.PerformClick();
+            else if (e.Text[0] == (char)8)
+                btnBack.PerformClick();
+            else if (e.Text[0] == (char)13)
+                btnEquals.PerformClick();
+
+            break;
+    }
+
+    //This will prevent other buttons focus firing its click event on <ENTER> while typing
+    btnEquals.Focus();
+}
+```
 
 
 # Future features
