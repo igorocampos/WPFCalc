@@ -1,5 +1,5 @@
 # WPFCalc
-This project is a Simple Calculator made using WPF and Class Abstraction on the operations. It is more of a tutorial for those starting with WPF, especially those who are migrating from WinForms.  
+This is a simple calculator WPF project that used Class Interface on the operations. It is more of a tutorial for those starting with WPF, especially those who are migrating from WinForms.  
 
 ![](WPFCalc.png)
 
@@ -18,7 +18,7 @@ Basically only the target framework was updated, so if you really need, you can 
 First of all open Visual Studio and Create a new project and select New WPF Application.
 There should be now inside your project a file named `MainWindow.xaml`. This file is the WPF version of WinForms `designer` file. It is a markup file, where we can change some attributes in order to set the design of the ~~form~~ window and its components as we want.
 
-For example in the opening tag of `Window`, we could change the attribute `Title` to `WPF Calculator`, set the `Width` and `Height` that we want and even set the Window startup location.
+For example in the opening tag of `Window`, we could change the attribute `Title` to `WPF Calculator`, set the `Width` and `Height` and even set the Window startup location.
 
 ```xaml
 Title="WPF Calculator" 
@@ -27,7 +27,7 @@ Width="280"
 WindowStartupLocation="CenterScreen"
 ```
 
-Alternatively, you can use Visual Studio to change the `XAML` file for you, just select the `Window` tag and press `F4`, or your personal shortcut, to open `Properties window`. There you will have all the settings about the `Window`.
+Alternatively, you can use Visual Studio to change the `XAML` file for you, just select the `Window` tag and press `F4`, or your personal shortcut, to open `Properties window`. There you will have all the properties of the `Window`.
 
 These properties can also be changed by code after the `InitializeComponent` method call. This part of the code will be in the constructor of `MainWindow` class, you can reach it opening the file named `MainWindow.xaml.cs`, or usually just pressing the shortcut `F7` while having`MainWindow.xaml` opened on the screen.
 
@@ -54,7 +54,7 @@ After that, we want to set the Rows and Columns definitions, as below:
     <ColumnDefinition Width="*"/>
 </Grid.ColumnDefinitions>
 ```
-Here we said that we want 6 rows and 4 columns in our grid, and all columns should have the same width dividing the total width of the Grid equally. Same for the rows height, except the first one, wich will have a fixed height of `40`. We will use this row for our Textbox.
+Here we said that we want 6 rows and 4 columns in our grid, and all columns should have the same width dividing the total width of the Grid equally. Same for the rows height, except the first one, which will have a fixed height of `40`. We will use this row for our Textbox.
 
 Just like the `Window`, this `Grid` component properties can be changed by Visual Studio in the Properties window.
 
@@ -74,7 +74,7 @@ Ok, now we can insert all our visual components inside this grid. First, let's a
 - The text font size should be `20`
 - Finally it should be a read-only Textbox.
 
-Again all this could also be set in the Properties window, but for me editing the XAML is so much easier!
+Again all this could also be set in the Properties window, but for me editing directly the XAML is so much easier!
 
 ## Number buttons
 Now, pretty much the same for the number buttons:
@@ -104,6 +104,194 @@ We will finish our design by adding the remaining buttons:
 <Button x:Name="btnBack" Content="←" Grid.Row="1" Grid.Column="0" FontSize="20" Margin="2" />
 <Button x:Name="btnClearEntry" Content="CE" Grid.Row="1" Grid.Column="1" FontSize="20" Margin="2" />
 <Button x:Name="btnClearAll" Content="C" Grid.Row="1" Grid.Column="2" FontSize="20" Margin="2" />
+```
+- `C` will be the Clear All button
+- `CE` will be Clear Entry, wich only clears what you are currently typing
+- `←` will be the Backspace button that erases the last typed digit
+- `.` will be the Decimal Separator, however we shall talk about this later
+
+## Events
+All set with the design, we need to set some click events for the buttons.
+This is very simple, just add the `Click` attribute in the Button tag like this:
+```xaml
+<Button x:Name="btn7" Content="7" Grid.Row="2" Grid.Column="0" FontSize="20" Margin="2" Click=""/>
+```
+Visual Studio will open a suggestion window where the first option is `<New Event Handler>` if you select it, it will automatically create a method for this event in the `MainWindow.xaml.cs` file, like this:
+```cs
+private void btnPoint_Click(object sender, RoutedEventArgs e)
+{
+
+}
+```
+
+But we don't need an event handler for every button. Some behaviors are pretty much the same.  Let's create the `regularButtonClick` method and link it with all number buttons:
+
+```cs
+private void regularButtonClick(object sender, RoutedEventArgs e)
+{
+    //Prevent 0 from appearing on the left of new numbers
+    if (txtInput.Text == "0")
+        txtInput.Text = "";
+
+    txtInput.Text = $"{txtInput.Text}{((Button)sender).Content}";
+}
+```
+```xaml
+<Button x:Name="btn7" Content="7" Grid.Row="2" Grid.Column="0" FontSize="20" Margin="2" Click="regularButtonClick"/>
+<Button x:Name="btn8" Content="8" Grid.Row="2" Grid.Column="1" FontSize="20" Margin="2" Click="regularButtonClick"/>
+<Button x:Name="btn9" Content="9" Grid.Row="2" Grid.Column="2" FontSize="20" Margin="2" Click="regularButtonClick"/>
+<Button x:Name="btn4" Content="4" Grid.Row="3" Grid.Column="0" FontSize="20" Margin="2" Click="regularButtonClick"/>
+<Button x:Name="btn5" Content="5" Grid.Row="3" Grid.Column="1" FontSize="20" Margin="2" Click="regularButtonClick"/>
+<Button x:Name="btn6" Content="6" Grid.Row="3" Grid.Column="2" FontSize="20" Margin="2" Click="regularButtonClick"/>
+<Button x:Name="btn1" Content="1" Grid.Row="4" Grid.Column="0" FontSize="20" Margin="2" Click="regularButtonClick"/>
+<Button x:Name="btn2" Content="2" Grid.Row="4" Grid.Column="1" FontSize="20" Margin="2" Click="regularButtonClick"/>
+<Button x:Name="btn3" Content="3" Grid.Row="4" Grid.Column="2" FontSize="20" Margin="2" Click="regularButtonClick"/>
+<Button x:Name="btn0" Content="0" Grid.Row="5" Grid.Column="0" FontSize="20" Margin="2" Click="regularButtonClick"/>
+```
+This will pretty much, add the clicked digit to the ending of the display, except when the display has a single `0`.
+
+The decimal separator has a little bit different behavior: 
+- Only one decimal separator is allowed in numbers
+
+Also, your decimal separator symbol can be different from mine! We should get wich symbol to use from the OS. Here is how we can do it:
+- Create a get only `string` property called `DecimalSeparator`
+- In the class constructor let's change the Button content to display the correct symbol
+
+```cs
+string DecimalSeparator => CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator;
+
+public MainWindow()
+{
+    InitializeComponent();
+    btnPoint.Content = DecimalSeparator;
+}
+```
+
+Now we can just create an Event Handler for our decimal separator button
+
+```cs
+private void btnPoint_Click(object sender, RoutedEventArgs e)
+{
+    if (txtInput.Text.Contains(this.DecimalSeparator))
+        return;
+
+    regularButtonClick(sender, e);
+}
+```
+
+Now a handler for `Backspace`, `Clear Entry` and `Clear All` buttons
+```cs
+private void btnBack_Click(object sender, RoutedEventArgs e)
+{
+    //Prevent from clearing zero
+    if (txtInput.Text == "0")
+        return;
+
+    txtInput.Text = txtInput.Text.Substring(0, txtInput.Text.Length - 1);
+    if (txtInput.Text == "")
+        txtInput.Text = "0";
+}
+private void btnClearEntry_Click(object sender, RoutedEventArgs e)
+   => txtInput.Text = "0";
+
+private void btnClearAll_Click(object sender, RoutedEventArgs e)
+{
+    //ToDo: This should also clear the current operation and saved first value
+    txtInput.Text = "0";
+}
+```
+```xaml
+<Button x:Name="btnBack" Content="←" Grid.Row="1" Grid.Column="0" FontSize="20" Margin="2" Click="btnBack_Click"/>
+<Button x:Name="btnClearEntry" Content="CE" Grid.Row="1" Grid.Column="1" FontSize="20" Margin="2" Click="btnClearEntry_Click"/>
+<Button x:Name="btnClearAll" Content="C" Grid.Row="1" Grid.Column="2" FontSize="20" Margin="2" Click="btnClearAll_Click"/>
+```
+
+The remaining buttons will get their events later on. First, we need to talk about the operations.
+
+## Operations
+Basically, all 4 operations will need 2 numbers and will return a decimal result.
+In order to save some code lines and getting things more maintainable, we will use here a Class Interface. A very simple one indeed:
+
+```cs
+ public interface IOperation
+{
+    decimal DoOperation(decimal val1, decimal val2);
+}
+```
+
+And now we will have 4 classes that implement this interface
+
+```cs
+ public class Sum : IOperation
+{
+    public decimal DoOperation(decimal val1, decimal val2) => val1 + val2;
+}
+
+public class Subtraction : IOperation
+{
+    public decimal DoOperation(decimal val1, decimal val2) => val1 - val2;
+}
+
+public class Division : IOperation
+{
+    public decimal DoOperation(decimal val1, decimal val2) => val1 / val2;
+}
+public class Multiplication : IOperation
+{
+    public decimal DoOperation(decimal val1, decimal val2) => val1 * val2;
+}
+```
+
+I just coded all this in the same `Operations.cs` file, but if you prefer, you can get a different file for every class and another one for the interface.
+
+Now we can have some polymorphism with the operation buttons.
+
+### Current Operation
+In order to know which Operation to do, we will need an `IOperation` variable, which we will call `CurrentOperation`.
+```cs
+IOperation CurrentOperation;
+```
+
+### `FirstValue`
+We will also need to save somewhere the first value typed right before the Operation Button was clicked. 
+For this, let's create a property called `FirstValue`.
+```cs
+decimal FirstValue { get; set; }
+```
+
+### Linking the Operations to their class
+Now we need to link all 4 operation buttons to its related class. We can do this using the `Tag` property of the buttons. This property has the `object` type, which can very well be our implementation of `IOperation`.
+
+```cs
+public MainWindow()
+{
+    InitializeComponent();
+    btnPoint.Content = DecimalSeparator;
+    btnSum.Tag = new Sum();
+    btnSubtraction.Tag = new Subtraction();
+    btnDivision.Tag = new Division();
+    btnMultiplication.Tag = new Multiplication();
+}
+```
+
+### Event Handler
+And finally using all this together we will have something like this:
+```cs
+private void operationButton_Click(object sender, RoutedEventArgs e)
+{
+    //if current operation is not null then we already have the FirstValue
+    if (CurrentOperation == null)
+        FirstValue = Convert.ToDecimal(txtInput.Text);
+
+    CurrentOperation = (IOperation)((Button)sender).Tag;
+    txtInput.Text = "";
+}
+```
+```xaml
+<Button x:Name="btnDivision" Content="/" Grid.Row="1" Grid.Column="3" FontSize="20" Margin="2" Click="operationButton_Click"/>
+<Button x:Name="btnMultiplication" Content="*" Grid.Row="2" Grid.Column="3" FontSize="20" Margin="2" Click="operationButton_Click"/>
+<Button x:Name="btnSum" Content="+" Grid.Row="3" Grid.Column="4" FontSize="20" Margin="2" Click="operationButton_Click"/>
+<Button x:Name="btnSubtraction" Content="-" Grid.Row="4" Grid.Column="3" FontSize="20" Margin="2" Click="operationButton_Click"/>
 ```
 
 
