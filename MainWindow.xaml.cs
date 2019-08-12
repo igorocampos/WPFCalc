@@ -16,7 +16,7 @@ namespace WPFCalc
         decimal FirstValue { get; set; }
         decimal? SecondValue { get; set; }
 
-        Operation CurrentOperation;
+        IOperation CurrentOperation;
 
         public MainWindow()
         {
@@ -65,7 +65,7 @@ namespace WPFCalc
             if (CurrentOperation == null)
                 FirstValue = Convert.ToDecimal(txtInput.Text);
 
-            CurrentOperation = (Operation)((Button)sender).Tag;
+            CurrentOperation = (IOperation)((Button)sender).Tag;
             SecondValue = null;
             txtInput.Text = "";
         }

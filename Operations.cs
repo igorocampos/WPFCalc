@@ -1,26 +1,26 @@
 ﻿namespace WPFCalc
 {
-    public abstract class Operation
+    public interface IOperation
     {
-        public abstract decimal DoOperation(decimal val1, decimal val2);
+        decimal DoOperation(decimal val1, decimal val2);
     }
 
-    public class Sum : Operation
+    public class Sum : IOperation
     {
-        public override decimal DoOperation(decimal val1, decimal val2) => val1 + val2;
+        public decimal DoOperation(decimal val1, decimal val2) => val1 + val2;
     }
 
-    public class Subtraction : Operation
+    public class Subtraction : IOperation
     {
-        public override decimal DoOperation(decimal val1, decimal val2) => val1 - val2;
+        public decimal DoOperation(decimal val1, decimal val2) => val1 - val2;
     }
 
-    public class Division : Operation
+    public class Division : IOperation
     {
-        public override decimal DoOperation(decimal val1, decimal val2) => val1 / val2;
+        public decimal DoOperation(decimal val1, decimal val2) => val1 / val2;
     }
-    public class Multiplication : Operation
+    public class Multiplication : IOperation
     {
-        public override decimal DoOperation(decimal val1, decimal val2) => val1 * val2;
+        public decimal DoOperation(decimal val1, decimal val2) => val1 * val2;
     }
 }
