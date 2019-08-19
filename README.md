@@ -481,11 +481,127 @@ private void Window_PreviewTextInput(object sender, TextCompositionEventArgs e)
 }
 ```
 
+# Unit Tests
+This might be silly, but the most important here is the principle of Unit Testing. Here, our main goal is:
+- If anyone in the future changes the Operations' classes and interface, we guarantee that it did not break our calculator, in other words, our calculator will still do successfully all 4 operations.
+
+## Adding a Test Project
+This is pretty straight forward, you just add a new `Test Project` in your solution, I even chose a .NET Core 2.2 Test Project since we won't be needing any WFP components for this tests.
+
+After that, you'll need to add the Calculator's project as a dependency to the Test project (Right-click in Dependencies>Add Reference...)
+
+## Testing the polymorphism 
+We want to be sure that every operation class is an implementation of `IOperation`. We can do that simple as below:
+```cs
+[TestMethod]
+public void Sum_IsIOperation()
+{
+    var sum = new Sum();
+    Assert.IsTrue(sum is IOperation);
+}
+
+[TestMethod]
+public void Subtraction_IsIOperation()
+{
+    var subtraction = new Subtraction();
+    Assert.IsTrue(subtraction is IOperation);
+}
+
+[TestMethod]
+public void Division_IsIOperation()
+{
+    var division = new Division();
+    Assert.IsTrue(division is IOperation);
+}
+
+[TestMethod]
+public void Multiplication_IsIOperation()
+{
+    var multiplication = new Multiplication();
+    Assert.IsTrue(multiplication is IOperation);
+}
+```
+
+The test will fail where the operation class is not an implementation of `IOperation`.
+
+
+## Testing the operations
+Basically, we guarantee in these tests that 2 random decimal numbers will result in the desired operation when method `DoOperation` is called.
+
+```cs
+[TestMethod]
+public void Sum_IsSuming()
+{
+    var sum = new Sum();
+    var rnd = new Random();
+    var a = (Decimal)rnd.NextDouble();
+    var b = (Decimal)rnd.NextDouble();
+    var result = sum.DoOperation(a, b);
+    Assert.AreEqual(a + b, result);
+}
+
+[TestMethod]
+public void Subtraction_IsSubtracting()
+{
+    var subtraction = new Subtraction();
+    var rnd = new Random();
+    var a = (Decimal)rnd.NextDouble();
+    var b = (Decimal)rnd.NextDouble();
+    var result = subtraction.DoOperation(a, b);
+    Assert.AreEqual(a - b, result);
+}
+
+[TestMethod]
+public void Multiplication_IsMultiplying()
+{
+    var multiplication = new Multiplication();
+    var rnd = new Random();
+    var a = (Decimal)rnd.NextDouble();
+    var b = (Decimal)rnd.NextDouble();
+    var result = multiplication.DoOperation(a, b);
+    Assert.AreEqual(a * b, result);
+}
+
+[TestMethod]
+public void Division_IsDividing()
+{
+    var division = new Division();
+    var rnd = new Random();
+    var a = (Decimal)rnd.NextDouble();
+    var b = (Decimal)rnd.NextDouble();
+
+    //Can't divide by 0
+    while (b == 0)
+        b = (Decimal)rnd.NextDouble();
+
+    var result = division.DoOperation(a, b);
+    Assert.AreEqual(a / b, result);
+}
+```
+
+This is not a 100% guarantee because 2 random numbers can make a successfully operation by using `DoOperation`, while other 2 would not.
+However, these unit tests will at least warn us when any 2 random numbers do not match with the operation's result.
+
+### Division by Zero
+If by any chance our division test gets `0` as the second random number, we should generate a new one. And actually, we should do so until the generated number is different from zero!
+
+## Testing Division by Zero
+For last, we can make a unit test to make sure when using `DoOperation` of `Division` class with a `0` in the second parameter will result in a `DivideByZeroException`.
+
+```cs
+[TestMethod]
+public void DivisionByZero_IsGivingException()
+{
+    var division = new Division();
+    var rnd = new Random();
+    var a = (Decimal)rnd.NextDouble();
+    Assert.ThrowsException<DivideByZeroException>(() => division.DoOperation(a, 0));
+}
+```
+
+
 
 # Future features
 
-## Unit Tests
-In the near future, I will include some Unit Tests for the operations.
- 
 ## Porting to .NET Core 3.0
 For now, Visual Studio 2019 only supports the WPF Designer in .NET Framework projects. I have the intention to port this project as soon as Visual Studio starts to support WPF Designer in .NET Core. However, if you wish to do it sooner, there is a workaround explained [here](https://docs.microsoft.com/en-us/dotnet/core/porting/wpf#wpf-designer).
