@@ -10,25 +10,29 @@ namespace Tests
         [TestMethod]
         public void Sum_IsIOperation()
         {
-            IOperation sum = new Sum();
+            var sum = new Sum();
+            Assert.IsTrue(sum is IOperation);
         }
 
         [TestMethod]
         public void Subtraction_IsIOperation()
         {
-            IOperation sum = new Subtraction();
+            var subtraction = new Subtraction();
+            Assert.IsTrue(subtraction is IOperation);
         }
 
         [TestMethod]
         public void Division_IsIOperation()
         {
-            IOperation sum = new Division();
+            var division = new Division();
+            Assert.IsTrue(division is IOperation);
         }
 
         [TestMethod]
         public void Multiplication_IsIOperation()
         {
-            IOperation sum = new Multiplication();
+            var multiplication = new Multiplication();
+            Assert.IsTrue(multiplication is IOperation);
         }
 
         [TestMethod]
