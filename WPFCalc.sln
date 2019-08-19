@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFCalc", "WPFCalc.csproj", "{22434A37-05F9-4728-B732-09A7FF051DCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{6C464131-F036-49EB-9B4D-93CF6EF75ADF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{22434A37-05F9-4728-B732-09A7FF051DCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22434A37-05F9-4728-B732-09A7FF051DCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22434A37-05F9-4728-B732-09A7FF051DCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C464131-F036-49EB-9B4D-93CF6EF75ADF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C464131-F036-49EB-9B4D-93CF6EF75ADF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C464131-F036-49EB-9B4D-93CF6EF75ADF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C464131-F036-49EB-9B4D-93CF6EF75ADF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DDDB8F57-9A40-47EF-B978-38A30B920144}
 	EndGlobalSection
 EndGlobal
