@@ -1,4 +1,6 @@
 # WPFCalc
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Figorocampos%2FWPFCalc.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Figorocampos%2FWPFCalc?ref=badge_shield)
+
 This is a simple calculator WPF project that used Class Interface on the operations. It is more of a tutorial for those starting with WPF, especially those who are migrating from WinForms.  
 
 ![](WPFCalc.png)
@@ -605,3 +607,7 @@ public void DivisionByZero_IsGivingException()
 
 ## Porting to .NET Core 3.0
 For now, Visual Studio 2019 only supports the WPF Designer in .NET Framework projects. I have the intention to port this project as soon as Visual Studio starts to support WPF Designer in .NET Core. However, if you wish to do it sooner, there is a workaround explained [here](https://docs.microsoft.com/en-us/dotnet/core/porting/wpf#wpf-designer).
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Figorocampos%2FWPFCalc.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Figorocampos%2FWPFCalc?ref=badge_large)
