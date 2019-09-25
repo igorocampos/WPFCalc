@@ -1,7 +1,7 @@
-**Why Azure Pipeline is not passing**
+**Why Azure Pipelines is not passing**
 > Version 3.0.100 of the .NET Core SDK requires at least version 16.3.0 of MSBuild. The current available version of MSBuild is 16.0.0.0. Change the .NET Core SDK specified in global.json to an older version that requires the MSBuild version currently available.
 
-It seems like it is too early to use .NETCore 3.0 in Azure Pipeline
+It seems like it is too early to use .NETCore 3.0 in Azure Pipelines
 # WPFCalc
 [![Build Status](https://dev.azure.com/igorocampos/PersonalProjects/_apis/build/status/igorocampos.WPFCalc?branchName=master)](https://dev.azure.com/igorocampos/PersonalProjects/_build/latest?definitionId=3&branchName=master)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Figorocampos%2FWPFCalc.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Figorocampos%2FWPFCalc?ref=badge_shield)
