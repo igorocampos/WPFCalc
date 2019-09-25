@@ -603,11 +603,11 @@ public void DivisionByZero_IsGivingException()
 ```
 
 
-
-# Future features
-
 ## Porting to .NET Core 3.0
-For now, Visual Studio 2019 only supports the WPF Designer in .NET Framework projects. I have the intention to port this project as soon as Visual Studio starts to support WPF Designer in .NET Core. However, if you wish to do it sooner, there is a workaround explained [here](https://docs.microsoft.com/en-us/dotnet/core/porting/wpf#wpf-designer).
+~~For now, Visual Studio 2019 only supports the WPF Designer in .NET Framework projects. I have the intention to port this project as soon as Visual Studio starts to support WPF Designer in .NET Core. However, if you wish to do it sooner, there is a workaround explained [here](https://docs.microsoft.com/en-us/dotnet/core/porting/wpf#wpf-designer).~~
+
+From this week's release of VS2019 16.3.0, VS will render WPF design, so as promissed, I ported this project to .NETCore 3.0. For further information about the porting please see this [commit](https://github.com/igorocampos/WPFCalc/commit/5b3c95390b9a22fadd1df1f0afa36e367011118e) 
+Don't forget to check Tools|Options|Environment|Preview Features|Use Previews of the .NET Core SDK (requires restart), otherwise the designer won't load.
 
 
 ## License
