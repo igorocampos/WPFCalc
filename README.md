@@ -17,7 +17,7 @@ This project was initially made using
 
 But it was updated to 
 - Visual Studio 2019
-- .NET Framework 4.8
+- .NET Core 3.0
 
 Basically only the target framework was updated, so if you really need, you can downgrade it back to your version instead of using the latest version.
 
