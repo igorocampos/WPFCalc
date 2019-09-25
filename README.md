@@ -19,7 +19,7 @@ But it was updated to
 - Visual Studio 2019
 - .NET Core 3.0
 
-Basically only the target framework was updated, so if you really need, you can downgrade it back to your version instead of using the latest version.
+Basically only the target framework was updated, so if you really need, you can downgrade it back to your version instead of using the latest. If you wish to downgrade it back to .NET Framework, be sure to see [this commit](https://github.com/igorocampos/WPFCalc/commit/5b3c95390b9a22fadd1df1f0afa36e367011118e)
 
 # Getting started
 First of all open Visual Studio and Create a new project and select New WPF Application.
