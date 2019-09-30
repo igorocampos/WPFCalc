@@ -1,7 +1,3 @@
-**Why Azure Pipelines is not passing**
-> Version 3.0.100 of the .NET Core SDK requires at least version 16.3.0 of MSBuild. The current available version of MSBuild is 16.0.0.0. Change the .NET Core SDK specified in global.json to an older version that requires the MSBuild version currently available.
-
-It seems like it is too early to use .NETCore 3.0 in Azure Pipelines
 # WPFCalc
 [![Build Status](https://dev.azure.com/igorocampos/PersonalProjects/_apis/build/status/igorocampos.WPFCalc?branchName=master)](https://dev.azure.com/igorocampos/PersonalProjects/_build/latest?definitionId=3&branchName=master)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Figorocampos%2FWPFCalc.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Figorocampos%2FWPFCalc?ref=badge_shield)
@@ -610,8 +606,17 @@ public void DivisionByZero_IsGivingException()
 ## Porting to .NET Core 3.0
 ~~For now, Visual Studio 2019 only supports the WPF Designer in .NET Framework projects. I have the intention to port this project as soon as Visual Studio starts to support WPF Designer in .NET Core. However, if you wish to do it sooner, there is a workaround explained [here](https://docs.microsoft.com/en-us/dotnet/core/porting/wpf#wpf-designer).~~
 
+### Update 2019-09-25
 From this week's release of VS2019 16.3.0, VS will render WPF design, so as promissed, I ported this project to .NETCore 3.0. For further information about the porting please see this [commit](https://github.com/igorocampos/WPFCalc/commit/5b3c95390b9a22fadd1df1f0afa36e367011118e) 
 Don't forget to check Tools|Options|Environment|Preview Features|Use Previews of the .NET Core SDK (requires restart), otherwise the designer won't load.
+
+**Why Azure Pipelines is not passing**
+> Version 3.0.100 of the .NET Core SDK requires at least version 16.3.0 of MSBuild. The current available version of MSBuild is 16.0.0.0. Change the .NET Core SDK specified in global.json to an older version that requires the MSBuild version currently available.
+
+It seems like it is too early to use .NETCore 3.0 in Azure Pipelines
+
+### Update 2019-09-30
+Azure Pipelines was updated and all is well now. The only change that I needed to do was in the `vmImage`, when I ported to .NET Core 3.0 I left it as `ubuntu-latest`, however since this is a WPF project it needs to run in a Windows machine, so I changed to `windows-latest` and pipeline is green again ;)
 
 
 ## License
