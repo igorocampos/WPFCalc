@@ -1,5 +1,5 @@
 # WPFCalc
-[![Build Status](https://dev.azure.com/igorocampos/PersonalProjects/_apis/build/status/igorocampos.WPFCalc?branchName=master)](https://dev.azure.com/igorocampos/PersonalProjects/_build/latest?definitionId=3&branchName=master)
+[![Build Status](https://dev.azure.com/igorocampos/PersonalProjects/_apis/build/status/igorocampos.WPFCalc?branchName=master)](https://dev.azure.com/igorocampos/PersonalProjects/_build?definitionId=3)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Figorocampos%2FWPFCalc.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Figorocampos%2FWPFCalc?ref=badge_shield)
 
 This is a simple calculator WPF project that used Class Interface on the operations. It is more of a tutorial for those starting with WPF, especially those who are migrating from WinForms.  
