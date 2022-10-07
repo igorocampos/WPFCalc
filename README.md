@@ -12,8 +12,8 @@ This project was initially made using
 - .NET Framework 4.5.2
 
 But it was updated to 
-- Visual Studio 2019
-- .NET Core 3.0
+- Visual Studio 2022
+- .NET 6.0
 
 Basically only the target framework was updated, so if you really need, you can downgrade it back to your version instead of using the latest. If you wish to downgrade it back to .NET Framework, be sure to see [this commit](https://github.com/igorocampos/WPFCalc/commit/5b3c95390b9a22fadd1df1f0afa36e367011118e)
 
@@ -602,6 +602,8 @@ public void DivisionByZero_IsGivingException()
 }
 ```
 
+## Porting to .NET 6.0
+As of 2022-10-07 this project has been updated to the latest LTS version of .NET, compiled and tested using Visual Studio 2022.
 
 ## Porting to .NET Core 3.0
 ~~For now, Visual Studio 2019 only supports the WPF Designer in .NET Framework projects. I have the intention to port this project as soon as Visual Studio starts to support WPF Designer in .NET Core. However, if you wish to do it sooner, there is a workaround explained [here](https://docs.microsoft.com/en-us/dotnet/core/porting/wpf#wpf-designer).~~
